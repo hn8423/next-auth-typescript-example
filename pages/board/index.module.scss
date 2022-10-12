@@ -1,0 +1,21 @@
+.board {
+  width: 1080px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  .board-header {
+    height: 80px;
+    width: 100%;
+
+    padding-top: 100px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid grey;
+    .board-header-title {
+      font-size: 30px;
+    }
+  }
+}

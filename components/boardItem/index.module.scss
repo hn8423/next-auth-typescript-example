@@ -1,0 +1,56 @@
+.board-item {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  border-top: 2px solid gray;
+  .board-item-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 10%;
+    height: 100%;
+
+    font-size: 20px;
+  }
+  .board-item-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 65%;
+    height: 100%;
+
+    font-size: 20px;
+  }
+  .board-item-date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 10%;
+    height: 100%;
+
+    font-size: 20px;
+  }
+  .board-item-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 10%;
+    height: 100%;
+
+    font-size: 20px;
+  }
+  .board-item-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 5%;
+    height: 100%;
+
+    font-size: 20px;
+  }
+}
