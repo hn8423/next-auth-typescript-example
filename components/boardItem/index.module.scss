@@ -15,13 +15,16 @@
   }
   .board-item-title {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     width: 65%;
     height: 100%;
 
+    color: gray;
     font-size: 20px;
+
+    cursor: pointer;
   }
   .board-item-date {
     display: flex;
@@ -52,5 +55,9 @@
     height: 100%;
 
     font-size: 20px;
+    .board-item-file-icon {
+      width: 30px;
+      height: 30px;
+    }
   }
 }
