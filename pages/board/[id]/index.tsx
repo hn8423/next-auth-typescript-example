@@ -9,6 +9,10 @@ import {
 import { useRouter } from "next/router"
 import { GetServerSideProps } from "next"
 
+import style from "./index.module.scss"
+import { classOption } from "utill"
+const classname = classOption(style)
+
 type parameter = { id?: string }
 
 export const getServerSideProps: GetServerSideProps = async function (ctx) {
@@ -34,5 +38,11 @@ export default function Detail({ id }: props) {
   )
 
   console.log(data)
-  return <div>default</div>
+  return (
+    <div className={classname("board")}>
+      <div className={classname("board-header")}>
+        <div className={classname("board-header-title")}>자료실</div>
+      </div>
+    </div>
+  )
 }
