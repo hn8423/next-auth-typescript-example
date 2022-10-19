@@ -2,7 +2,7 @@ import { SessionProvider } from "next-auth/react"
 import type { AppProps } from "next/app"
 import "react-quill/dist/quill.snow.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-// import "./styles.css"
+import "./styles.css"
 
 const queryClient = new QueryClient()
 // Use the <SessionProvider> to improve performance and allow components that call
@@ -15,7 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
       session={pageProps.session}
     >
       <QueryClientProvider client={queryClient}>
-        {" "}
         <Component {...pageProps} />
       </QueryClientProvider>
     </SessionProvider>

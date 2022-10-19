@@ -1,0 +1,95 @@
+.board {
+  width: 1080px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  .board-header {
+    height: 80px;
+    width: 100%;
+
+    padding-top: 100px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid grey;
+    .board-header-title {
+      font-size: 30px;
+    }
+  }
+  .board-subtitle {
+    display: flex;
+    column-gap: 5px;
+    width: 100%;
+    border-bottom: 4px solid black;
+    padding-bottom: 10px;
+  }
+  .board-title-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid grey;
+    font-size: 20px;
+    .board-title {
+      padding: 20px;
+    }
+  }
+  .board-file-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid grey;
+    border-bottom: 2px solid grey;
+    .board-file-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30%;
+      background-color: rgb(215, 211, 211);
+    }
+    .board-file-contents {
+      padding: 10px;
+    }
+  }
+  .board-button-wrapper {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .board-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      width: 120px;
+      height: 40px;
+      background-color: blue;
+      cursor: pointer;
+    }
+  }
+  .board-next-wrapper {
+    border-top: 4px solid black;
+    width: 100%;
+    height: 100%;
+    .board-next {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 50px;
+      border-bottom: 2px solid gray;
+      .board-next-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
+        height: 100%;
+      }
+      .board-next-contents {
+        color: gray;
+      }
+    }
+  }
+}

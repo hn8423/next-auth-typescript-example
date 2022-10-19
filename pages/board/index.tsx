@@ -4,9 +4,14 @@ const classname = classOption(style)
 
 import BoardList from "components/boardList"
 import Search from "components/ search"
+import { useRouter } from "next/router"
 
 export default function Board() {
-  // console.log("env : ", process.env.DB)
+  const router = useRouter()
+
+  const onClickWrite = () => {
+    router.push("/board/write")
+  }
   return (
     <div className={classname("board")}>
       <div className={classname("board-header")}>
@@ -14,6 +19,11 @@ export default function Board() {
       </div>
       <Search />
       <BoardList />
+      <div className={classname("board-write-wrapper")}>
+        <div className={classname("board-write")} onClick={onClickWrite}>
+          글쓰기
+        </div>
+      </div>
     </div>
   )
 }

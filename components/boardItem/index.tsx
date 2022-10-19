@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async function (ctx) {
       // console.log(response)
     })
     .catch((e) => {
-      console.log(e)
+      console.log
     })
 
   if (boardItemList) {
@@ -54,8 +54,8 @@ export default function BoardItem({ item }: any, { props }: any) {
 
   function onClickDetail() {
     router.push({
-      pathname: `/board/[id]`,
-      query: { id: item.id },
+      pathname: `/board/[boardid]`,
+      query: { boardid: item.id },
     })
   }
 

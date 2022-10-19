@@ -1,14 +1,13 @@
-import excuteQuery from "../../../../lib/db"
+import type { NextApiRequest, NextApiResponse } from "next"
+const db = require("../../../../lib/db")
 
-export default async (req: any, res: any) => {
-  try {
-    const result = await excuteQuery({
-      query: "SELECT * FROM file_board.board_item;",
-    })
-    if (result) {
+export default function read(req: NextApiRequest, res: NextApiResponse) {
+  db.query("SELECT * FROM board_item", function (err: any, result: any) {
+    if (err) {
+      console.log(err)
+    } else {
+      // console.log(result)
       res.status(200).json(result)
     }
-  } catch (error) {
-    console.log(error)
-  }
+  })
 }

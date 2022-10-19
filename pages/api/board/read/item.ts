@@ -1,16 +1,18 @@
-import excuteQuery from "../../../../lib/db"
+import type { NextApiRequest, NextApiResponse } from "next"
+const db = require("../../../../lib/db")
 
-export default async (req: any, res: any) => {
-  // console.log("req :", req.body)
-  const { id } = req.body
-  try {
-    const result = await excuteQuery({
-      query: `SELECT * FROM file_board.board_item where id = ${id};`,
-    })
-    if (result) {
-      res.status(200).json(result)
+export default function readItem(req: NextApiRequest, res: NextApiResponse) {
+  let id = req.body.data.boardId
+  console.log("req.body :", req.body)
+  db.query(
+    `SELECT * FROM board_item where id = ${id}`,
+    function (err: any, result: any) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(result)
+        res.status(200).json(result)
+      }
     }
-  } catch (error) {
-    console.log(error)
-  }
+  )
 }

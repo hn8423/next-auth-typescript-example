@@ -17,8 +17,14 @@ import {
 export default function BoardList() {
   // console.log(items)
 
-  const { isLoading, error, data } = useQuery(["read"], () =>
-    axios("/api/board/read")
+  const { isLoading, error, data } = useQuery(
+    ["read"],
+    () => axios("/api/board/read"),
+    {
+      onError: () => {
+        console.error("error check")
+      },
+    }
   )
 
   const boadItemList = useMemo(() => {
