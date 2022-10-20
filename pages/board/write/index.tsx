@@ -5,9 +5,11 @@ import axios from "axios"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/router"
 import { GetServerSideProps } from "next"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import dynamic from "next/dynamic"
 import parse from "html-react-parser"
+import AWS from "aws-sdk"
+import { useS3Upload } from "next-s3-upload"
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
@@ -50,28 +52,42 @@ const formats = [
   "video",
 ]
 
-function onSubmit(value: any) {
-  console.log(value)
-  let data = { content: value }
-  axios
-    .post("/api/sendpost", data)
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((e) => {
-      console.log(e)
-    })
-}
-
 export default function BoardWrite() {
   // const [date, setDate] = useState(new Date())
   const [title, setTitle] = useState("")
   const [value, setValue] = useState("")
+  // const [progress, setProgress] = useState(0)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const inputRef = useRef<any>(null)
+  let [imageUrl, setImageUrl] = useState("")
+  // const [urls, setUrls] = useState([]);
+  let { FileInput, openFileDialog, uploadToS3, files } = useS3Upload()
   const router = useRouter()
+
+  let handleFileChange = async (file: any) => {
+    let { url } = await uploadToS3(file)
+    let customUrl = url.replace("boardimageshyun.", "")
+    setImageUrl(customUrl)
+  }
 
   const onClickHome = () => {
     router.push("/board")
   }
+
+  const mutation: any = useMutation(
+    (newTodo) => {
+      return axios.post("/api/board/create", newTodo)
+    },
+    {
+      onSuccess: () => {
+        var formData = new FormData()
+        // formData.append("file", selectedFile)
+        // s3upload.mutate({})
+        router.push("/board")
+      },
+    }
+  )
 
   type state = React.Dispatch<React.SetStateAction<string>>
 
@@ -81,8 +97,31 @@ export default function BoardWrite() {
     }
   }
 
+  function onSubmit() {
+    if (imageUrl === "") {
+      alert("파일 업로드를 해주세요")
+      return
+    }
+    mutation.mutate({
+      userId: 1,
+      title,
+      count: 0,
+      file: imageUrl,
+      contents: value,
+    })
+  }
+
   return (
     <div className={classname("board")}>
+      {mutation.isLoading ? (
+        "Adding todo.."
+      ) : (
+        <>
+          {mutation.isError ? (
+            <div>An error occurred: {mutation.error.message}</div>
+          ) : null}
+        </>
+      )}
       <div className={classname("board-header")}>
         <div className={classname("board-header-title")}>글쓰기</div>
       </div>
@@ -110,10 +149,22 @@ export default function BoardWrite() {
         />
       </div>
       <div className={classname("board-file-wrapper")}>
-        <div className={classname("board-file-title")}>파일 첨부 </div>
-        <div className={classname("board-file-contents")}>파일 내용</div>
+        <FileInput onChange={handleFileChange} />
+        <div className={classname("board-file-title")} onClick={openFileDialog}>
+          파일 첨부
+        </div>
+        <div className={classname("board-file-contents")}>
+          {files.map((file, index) => (
+            <div key={index}>
+              {index + 1}st File progress: {file.progress}%
+            </div>
+          ))}
+        </div>
       </div>
       <div className={classname("board-button-wrapper")}>
+        <button className={classname("board-button")} onClick={onSubmit}>
+          Send post
+        </button>
         <div className={classname("board-button")} onClick={onClickHome}>
           목록
         </div>
@@ -124,9 +175,6 @@ export default function BoardWrite() {
           <div className={classname("board-next-contents")}>다음 자료 제목</div>
         </div>
       </div>
-      <button onClick={(e) => onSubmit(value)}> Send post</button>
-      <p>{value}</p>
-      {parse(value)}
     </div>
   )
 }

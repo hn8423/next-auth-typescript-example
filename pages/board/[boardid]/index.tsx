@@ -12,6 +12,38 @@ import {
 import { useRouter } from "next/router"
 import { GetServerSideProps } from "next"
 
+import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
+
+const QuillNoSSRWrapper = dynamic(import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+})
+
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+  "video",
+]
+
+const modules = {
+  toolbar: [],
+  clipboard: {
+    matchVisual: false,
+  },
+}
+
 export const getServerSideProps: GetServerSideProps = async function (ctx) {
   let props: { parameter?: any } = {}
   let parameter = ctx.params?.boardid
@@ -26,6 +58,7 @@ export default function BoardDetail() {
   const router = useRouter()
   // console.log("props :", props)
   const { boardid } = router.query
+  const [fileName, setFileName] = useState("")
 
   const { isLoading, error, data } = useQuery(
     ["readItem"],
@@ -38,10 +71,41 @@ export default function BoardDetail() {
   )
 
   const result = data?.data[0]
+  useEffect(() => {
+    let arr = result.file.split("/")
+    let fileName = arr[arr.length - 1]
+    setFileName(fileName)
+  }, [result])
   // console.log(result)
 
   const onClickHome = () => {
     router.push("/board")
+  }
+
+  const downloadFile = () => {
+    let url = result.file
+    // "https://boardimageshyun.s3.ap-northeast-2.amazonaws.com/next-s3-uploads/5e749c87-3ffc-4888-bc0a-3e3635b3f86d/images.png"
+
+    fetch(url, { method: "GET" })
+      .then((res) => {
+        return res.blob()
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = fileName
+        document.body.appendChild(a)
+        a.click()
+        setTimeout((_) => {
+          window.URL.revokeObjectURL(url)
+        }, 60000)
+        a.remove()
+        // setOpen(false)
+      })
+      .catch((err) => {
+        console.error("err: ", err)
+      })
   }
 
   return (
@@ -61,10 +125,21 @@ export default function BoardDetail() {
           <div className={classname("board-title-wrapper")}>
             <div className={classname("board-title")}>{result.title}</div>
           </div>
-          <div>{result.contents}</div>
+          <div className={classname("board-quill-wrapper")}>
+            <QuillNoSSRWrapper
+              className={classname("board-quill")}
+              value={result.contents}
+              readOnly
+            />
+          </div>
           <div className={classname("board-file-wrapper")}>
             <div className={classname("board-file-title")}>파일</div>
-            <div className={classname("board-file-contents")}>파일 내용</div>
+            <div
+              className={classname("board-file-contents")}
+              onClick={downloadFile}
+            >
+              {fileName}
+            </div>
           </div>
           <div className={classname("board-button-wrapper")}>
             <div className={classname("board-button")} onClick={onClickHome}>
